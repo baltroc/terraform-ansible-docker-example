@@ -35,6 +35,8 @@
           - /home/ubuntu/webserver:/var/www/html
         networks:
           - name: mongoNetwork
+        purge_networks: yes
+        networks_cli_compatible: yes
 
     - name: Install Mongo extension for php
       command: docker exec mywebserver pecl install mongodb

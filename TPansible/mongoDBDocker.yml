@@ -32,3 +32,5 @@
           - /home/ubuntu/mongo/data:/data/db
         networks:
           - name: mongoNetwork
+        purge_networks: yes
+        networks_cli_compatible: yes
