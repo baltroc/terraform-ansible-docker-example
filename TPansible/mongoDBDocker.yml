@@ -1,0 +1,34 @@
+---
+- name: mongoDB install docker
+  hosts: ubuntuGroup
+  become: true
+
+  tasks:
+    - name: Create workspace
+      file:
+        path: /home/ubuntu/mongo/data
+        state: directory
+
+    - name: "Create a network"
+      docker_network:
+        name: mongoNetwork
+
+    - name: Pull mongo image
+      docker_image:
+        name: mongo
+        source: pull
+
+    - name: Docker container mongodb
+      docker_container:
+        name: mymongodb
+        image: mongo
+        state: started
+        detach: true
+        interactive: true
+        restart: yes
+        ports:
+          - "27017:27017"
+        volumes:
+          - /home/ubuntu/mongo/data:/data/db
+        networks:
+          - name: mongoNetwork

@@ -1,0 +1,29 @@
+---
+- name: setup firewall
+  hosts: ubuntuGroup
+  become: true
+
+  tasks:
+  - name: install ufw firewall
+    apt:
+      name: ufw
+      state: present
+      update_cache: yes
+
+  - name: allow ssh
+    ufw:
+      rule: allow
+      port: '22'
+      proto: tcp
+  - name: allow http
+    ufw:
+      rule: allow
+      port: '80'
+  - name: allow https
+    ufw:
+      rule: allow
+      port: '443'
+  - name: enable ufw firewall
+    ufw:
+      state: enabled
+      policy: deny
