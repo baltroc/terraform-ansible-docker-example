@@ -1,0 +1,56 @@
+---
+- name: apache install docker
+  hosts: ubuntuGroup
+  become: true
+
+  tasks:
+    - name: Create workspace
+      file:
+        path: /home/ubuntu/webserver
+        state: directory
+
+    - name: Copying index.php
+      copy:
+        src: "./webserver/index.php"
+        dest: "/home/ubuntu/webserver"
+      ignore_errors: yes
+
+
+    - name: Pull php:7.2-apache image
+      docker_image:
+        name: php:7.2-apache
+        source: pull
+
+    - name: Docker container webserver
+      docker_container:
+        name: mywebserver
+        image: php:7.2-apache
+        state: started
+        detach: true
+        interactive: true
+        restart: yes
+        ports:
+          - "8080:80"
+        volumes:
+          - /home/ubuntu/webserver:/var/www/html
+        networks:
+          - name: mongoNetwork
+        purge_networks: yes
+        networks_cli_compatible: yes
+
+    - name: Install Mongo extension for php
+      command: docker exec mywebserver pecl install mongodb
+      ignore_errors: yes
+
+    - name: Copying ini file to ubuntu
+      copy:
+        src: "./php.ini"
+        dest: "/home/ubuntu/"
+      ignore_errors: yes
+
+    - name: copying ini file to container
+      command: docker cp /home/ubuntu/php.ini mywebserver:/usr/local/etc/php/
+      ignore_errors: yes
+
+    - name: restart mywebserver
+      command: docker restart mywebserver

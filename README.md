@@ -1,11 +1,1 @@
-# Deploiement et Adminstration du Cloud
-
-Nicolas Inati
-
-Déploiement d'un serveur web en utilisant OpenStack, Terraform, Ansible et Docker.
-
-#### Utilisation
-
-Cloner le dépôt, dans TPterraform/main.tf modifier user_name, tenant_name et password.
-
-Executer run.sh
+This repository contains a simple example to create 4 instances on an open stack cloud using terraform with a dockerise Apache web server and a dockerise mongo database on each instance deployed using Ansible.
